@@ -2,21 +2,8 @@
 import pygame
 import math
 import random
-
-# color constants
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-PURPLE = (180, 0, 180)
-
-# math constants
-
-# game constants
-DISPLAY_WIDTH = 700
-DISPLAY_HEIGHT = 500
-FPS = 60
+from settings import *
+from sprites import Player, Enemy, Missile
 
 ############################################################
 ############################################################
@@ -26,14 +13,40 @@ pygame.init()
 screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 clock = pygame.time.Clock()
 
+# Sounds
+shoot_sound = pygame.mixer.Sound("assets/shoot.wav")
+
+### SPRITE GROUPS ###
+all_sprites = pygame.sprite.Group()              # group for all sprites
+player_group = pygame.sprite.Group()             # create sprite group for player
+missile_group = pygame.sprite.Group()            # create missile sprite group
+
+# Player
+player = Player("assets/player.png")            # create player object
+player_group.add(player)                        # add player to its group
+all_sprites.add(player)                         # add player to sprites group
+
+
+
 running = True
+
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                missile = Missile(player.rect.centerx - MISSILE_WIDTH//2, player.rect.top)
+                missile_group.add(missile)
+                all_sprites.add(missile)
+                shoot_sound.play
 
-    screen.fill(PURPLE)
+    screen.fill(BLACK)
+
+    missile_group.draw(screen)
+    player_group.draw(screen)               # call draw and update for each sprite
+    all_sprites.update()                    # all_sprites take care of calling all sprite updates
 
     pygame.display.flip()
 
