@@ -15,16 +15,34 @@ clock = pygame.time.Clock()
 
 # Sounds
 shoot_sound = pygame.mixer.Sound("assets/shoot.wav")
+enemy_kill = pygame.mixer.Sound("assets/invaderkilled.wav")
 
 ### SPRITE GROUPS ###
 all_sprites = pygame.sprite.Group()              # group for all sprites
 player_group = pygame.sprite.Group()             # create sprite group for player
 missile_group = pygame.sprite.Group()            # create missile sprite group
+enemy_group = pygame.sprite.Group()
 
 # Player
 player = Player("assets/player.png")            # create player object
 player_group.add(player)                        # add player to its group
 all_sprites.add(player)                         # add player to sprites group
+
+# enemy
+enemy_list = []
+for column in range(10):
+    mult = DISPLAY_WIDTH//10
+    enemy = Enemy(enemy_img, column*mult, row)
+    for row in range(5):
+        if row == 0:
+            enemy_img = ENEMIES[0]
+        elif 0 < row < 3:
+            enemy_img = ENEMIES[1]
+        else:
+            enemy_img = ENEMIES[2]
+enemy = Enemy()
+enemy_group.add(enemy)
+all_sprites.add(enemy)
 
 
 
@@ -42,8 +60,15 @@ while running:
                 all_sprites.add(missile)
                 shoot_sound.play
 
+    enemy_kills = pygame.sprite.groupcollide(missile_group, enemy_group, True, True)
+    # pygame.sprite.groupcollide(group1, group2, dokill1, dokill2)
+    # dokill 1&2 are booleans (use true or false) true means the group disappears when collided, false means it doesn't
+    if enemy_kills:
+        enemy_kill.play()
+
     screen.fill(BLACK)
 
+    enemy_group.draw(screen)
     missile_group.draw(screen)
     player_group.draw(screen)               # call draw and update for each sprite
     all_sprites.update()                    # all_sprites take care of calling all sprite updates
