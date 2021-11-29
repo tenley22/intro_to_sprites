@@ -1,7 +1,6 @@
 # go to terminal (@ bottom of screen) and write "pip install pygame" after PS C: line
 import pygame
 import math
-import random
 from settings import *
 from sprites import Player, Enemy, Missile
 
