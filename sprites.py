@@ -30,14 +30,15 @@ class Player(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x_val, y_val):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.image.load(RED_ALIEN)
-        self.rect = self.image.get_rect()
-        self.rect.center = DISPLAY_WIDTH // 2, self.rect.height
         self.y_velo = 0  # velocity
         self.x_velo = 2
+        self.rect = self.image.get_rect()
+        self.rect.x = x_val
+        self.rect.y = y_val
 
     def update(self):
         self.rect.y += self.y_velo
