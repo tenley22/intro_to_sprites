@@ -29,19 +29,17 @@ all_sprites.add(player)                         # add player to sprites group
 
 # enemy
 for row in range(5):
-    if row == 1:
+    if row == 0:
         enemy_img = RED_ALIEN
-    elif 1 < row < 4:
+    elif 1 <= row < 3:
         enemy_img = GREEN_ALIEN
     else:
         enemy_img = YELLOW_ALIEN
     for column in range(10):
-        mult = DISPLAY_WIDTH // 10
-        enemy = Enemy()
-
-
-enemy_group.add(enemy)
-all_sprites.add(enemy)
+        mult = DISPLAY_WIDTH // 14
+        enemy = Enemy(enemy_img, 5 + mult * column, 10 + mult * row)
+        enemy_group.add(enemy)
+        all_sprites.add(enemy)
 
 
 running = True
