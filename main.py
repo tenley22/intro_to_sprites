@@ -36,8 +36,7 @@ for row in range(5):
     else:
         enemy_img = YELLOW_ALIEN
     for column in range(10):
-        mult = SPACING
-        enemy = Enemy(enemy_img, 5 + mult * column, 10 + mult * row, row)
+        enemy = Enemy(enemy_img, 5 + SPACING * column, 10 + SPACING * row, row)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
