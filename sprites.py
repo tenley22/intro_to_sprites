@@ -32,9 +32,9 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     y_level = 0
     change_x = 1
-    row_height = 10
+    row_height = SPACING
 
-    def __init__(self, image_path, x_val, y_val):
+    def __init__(self, image_path, x_val, y_val, row):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.image.load(image_path)
@@ -43,6 +43,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x_val
         self.rect.y = y_val
+        self.row = row
 
     def update(self):
         self.rect.x += Enemy.change_x
@@ -50,7 +51,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.right >= DISPLAY_WIDTH or self.rect.left <= 0:
             Enemy.y_level += 1
             Enemy.change_x *= -1
-        Enemy.y_val = (Enemy.y_level * Enemy.row_height)
+        self.rect.y = (Enemy.y_level + self.row)*(SPACING)
 
 
 class Missile(pygame.sprite.Sprite):

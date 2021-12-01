@@ -36,8 +36,8 @@ for row in range(5):
     else:
         enemy_img = YELLOW_ALIEN
     for column in range(10):
-        mult = DISPLAY_WIDTH // 14
-        enemy = Enemy(enemy_img, 5 + mult * column, 10 + mult * row)
+        mult = SPACING
+        enemy = Enemy(enemy_img, 5 + mult * column, 10 + mult * row, row)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
