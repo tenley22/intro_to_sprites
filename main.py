@@ -1,8 +1,10 @@
 # go to terminal (@ bottom of screen) and write "pip install pygame" after PS C: line
+import random
+
 import pygame
 import math
 from settings import *
-from sprites import Player, Enemy, Missile
+from sprites import Player, Enemy, Missile, Bomb
 
 ############################################################
 ############################################################
@@ -21,6 +23,7 @@ all_sprites = pygame.sprite.Group()              # group for all sprites
 player_group = pygame.sprite.Group()             # create sprite group for player
 missile_group = pygame.sprite.Group()            # create missile sprite group
 enemy_group = pygame.sprite.Group()
+bomb_group = pygame.sprite.Group()
 
 # Player
 player = Player("assets/player.png")            # create player object
@@ -39,6 +42,8 @@ for row in range(5):
         enemy = Enemy(enemy_img, 5 + SPACING * column, 10 + SPACING * row, row)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
+        bomber = random.choice(enemy_group)
+
 
 
 running = True
@@ -55,11 +60,18 @@ while running:
                 all_sprites.add(missile)
                 shoot_sound.play
 
+    bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top, bomber)
+    bomb_group.add(bomb)
+    all_sprites.add(bomb)
+
+
     enemy_kills = pygame.sprite.groupcollide(missile_group, enemy_group, True, True)
+    player_enemy_collide = pygame.sprite.groupcollide(player_group, enemy_group, True, True)
     # pygame.sprite.groupcollide(group1, group2, dokill1, dokill2)
     # dokill 1&2 are booleans (use true or false) true means the group disappears when collided, false means it doesn't
     if enemy_kills:
         enemy_kill.play()
+
 
     screen.fill(BLACK)
 

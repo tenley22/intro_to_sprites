@@ -8,12 +8,12 @@ BLUE = (0, 0, 255)
 # math constants
 
 # game constants
-DISPLAY_WIDTH = 700
-DISPLAY_HEIGHT = 500
+DISPLAY_WIDTH = 600
+DISPLAY_HEIGHT = 700
 FPS = 60
 SPACING = DISPLAY_WIDTH // 14
 
-# for missile
+# for missile/bomb
 MISSILE_WIDTH = 4
 MISSILE_HEIGHT = 15
 
