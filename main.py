@@ -42,8 +42,6 @@ for row in range(5):
         enemy = Enemy(enemy_img, 5 + SPACING * column, 10 + SPACING * row, row)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
-        bomber = random.choice(enemy_group)
-
 
 
 running = True
@@ -59,11 +57,12 @@ while running:
                 missile_group.add(missile)
                 all_sprites.add(missile)
                 shoot_sound.play
-
+    '''
+    bomber = random.choice(enemy_group)
     bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top, bomber)
     bomb_group.add(bomb)
     all_sprites.add(bomb)
-
+    '''
 
     enemy_kills = pygame.sprite.groupcollide(missile_group, enemy_group, True, True)
     player_enemy_collide = pygame.sprite.groupcollide(player_group, enemy_group, True, True)
@@ -71,7 +70,6 @@ while running:
     # dokill 1&2 are booleans (use true or false) true means the group disappears when collided, false means it doesn't
     if enemy_kills:
         enemy_kill.play()
-
 
     screen.fill(BLACK)
 
