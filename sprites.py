@@ -73,17 +73,17 @@ class Missile(pygame.sprite.Sprite):
 
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, x, y, other):
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.y_velo = 2
 
         self.image = pygame.Surface((MISSILE_WIDTH, MISSILE_WIDTH))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
-        self.other.rect.x = x
-        self.other.rect.y = y
-        pygame.draw.rect(self.image, BLUE, [self.other.rect.x, self.other.rect.y, MISSILE_WIDTH, MISSILE_WIDTH])
-        self.other = other
+        self.rect.x = x
+        self.rect.y = y
+
+        pygame.draw.rect(self.image, BLUE, [self.rect.x, self.rect.y, MISSILE_WIDTH, MISSILE_WIDTH])
 
     def update(self):
         self.rect.y += self.y_velo

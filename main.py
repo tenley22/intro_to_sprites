@@ -57,12 +57,11 @@ while running:
                 missile_group.add(missile)
                 all_sprites.add(missile)
                 shoot_sound.play
-    '''
-    bomber = random.choice(enemy_group)
-    bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top, bomber)
+
+    bomber = random.choice(list(enemy_group))
+    bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top)
     bomb_group.add(bomb)
     all_sprites.add(bomb)
-    '''
 
     enemy_kills = pygame.sprite.groupcollide(missile_group, enemy_group, True, True)
     player_enemy_collide = pygame.sprite.groupcollide(player_group, enemy_group, True, True)
@@ -73,6 +72,7 @@ while running:
 
     screen.fill(BLACK)
 
+    bomb_group.draw(screen)
     enemy_group.draw(screen)
     missile_group.draw(screen)
     player_group.draw(screen)               # call draw and update for each sprite
