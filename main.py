@@ -31,26 +31,29 @@ player_group.add(player)                        # add player to its group
 all_sprites.add(player)                         # add player to sprites group
 
 # enemy
-for row in range(5):
+x_offset = 30
+y_offset = 100
+v_spacing = DISPLAY_HEIGHT//18
+h_spacing = DISPLAY_WIDTH//12
+for row in range(6):
     if row == 0:
         enemy_img = RED_ALIEN
-    elif 1 <= row < 3:
+    elif 0 < row < 3:
         enemy_img = GREEN_ALIEN
     else:
         enemy_img = YELLOW_ALIEN
     for column in range(10):
-        enemy = Enemy(enemy_img, 5 + SPACING * column, 10 + SPACING * row, row)
+        x_pos = column*h_spacing + x_offset
+        y_pos = row*v_spacing + y_offset
+        enemy = Enemy(enemy_img, x_pos, y_pos)
         enemy_group.add(enemy)
-        all_sprites.add(enemy)
 
-# create enemy bombs
-for bomb in range(6):
-    bomber = random.choice(list(enemy_group))
-    bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top)
-    bomb_group.add(bomb)
-    all_sprites.add(bomb)
+
+missile_previous_fire = pygame.time.get_ticks()
+bomb_previous_fire = pygame.time.get_ticks()
 
 running = True
+enemy_velocity = 1
 
 while running:
 
@@ -59,32 +62,45 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                missile = Missile(player.rect.centerx - MISSILE_WIDTH//2, player.rect.top)
-                missile_group.add(missile)
-                all_sprites.add(missile)
-                shoot_sound.play
-    '''
-    bomber = random.choice(list(enemy_group))
-    bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top)
-    bomb_group.add(bomb)
-    all_sprites.add(bomb)
-    '''
+                missile_current_fire = pygame.time.get_ticks()
+                if missile_current_fire - missile_previous_fire > MISSILE_DELAY:
+                    missile_previous_fire = missile_current_fire
+                    missile = Missile(player.rect.centerx - MISSILE_WIDTH//2, player.rect.top)
+                    missile_group.add(missile)
+                    all_sprites.add(missile)
+                    shoot_sound.play
 
-    if len(bomb_group) > 6:
-        for bomb in range(6):
-            bomb_group.add(bomb)
-            all_sprites.add(bomb)
+    bomber = random.choice(list(enemy_group))
+    bomb_current_fire = pygame.time.get_ticks()
+    if bomb_current_fire - bomb_previous_fire > BOMB_DELAY:
+        bomb = Bomb(bomber.rect.centerx - MISSILE_WIDTH // 2, bomber.rect.top)
+        bomb_group.add(bomb)
+        all_sprites.add(bomb)
+
 
     enemy_kills = pygame.sprite.groupcollide(missile_group, enemy_group, True, True)
     player_enemy_collide = pygame.sprite.groupcollide(player_group, enemy_group, True, True)
-    missile_collide = pygame.sprite.groupcollide(player_group, bomb_group, True, True)
+    #bomb_collide = pygame.sprite.groupcollide(player_group, bomb_group, True, True)
     # pygame.sprite.groupcollide(group1, group2, dokill1, dokill2)
     # dokill 1&2 are booleans (use true or false) true means the group disappears when collided, false means it doesn't
     if enemy_kills:
         enemy_kill.play()
     # game over
-    if player_enemy_collide or missile_collide:
+    if player_enemy_collide: #or bomb_collide:
         running = False
+    enemies = enemy_group.sprites()
+    for enemy in enemies:
+        if enemy.rect.right >= DISPLAY_WIDTH:
+            enemy_velocity = -1
+            if enemies:
+                for alien in enemies:
+                    alien.rect.y += 2
+
+        elif enemy.rect.x <= 0:
+            enemy_velocity = 1
+            if enemies:
+                for alien in enemies:
+                    alien.rect.y += 2
 
     screen.fill(BLACK)
 
@@ -92,7 +108,10 @@ while running:
     enemy_group.draw(screen)
     missile_group.draw(screen)
     player_group.draw(screen)               # call draw and update for each sprite
-    all_sprites.update()                    # all_sprites take care of calling all sprite updates
+
+    # update all groups
+    enemy_group.update(enemy_velocity)
+    all_sprites.update()
 
     pygame.display.flip()
 
