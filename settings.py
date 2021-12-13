@@ -4,6 +4,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+BLOCK_COLOR = (100, 0, 100)
 
 # math constants
 
@@ -12,11 +13,12 @@ DISPLAY_WIDTH = 600
 DISPLAY_HEIGHT = 700
 FPS = 60
 MISSILE_DELAY = 300
-BOMB_DELAY = 200
+BOMB_DELAY = 500
 
 # for missile/bomb
 MISSILE_WIDTH = 4
 MISSILE_HEIGHT = 15
+BOMB_HW = 6
 
 # images
 PLAYER = "assets/player.png"
@@ -41,5 +43,15 @@ LAYOUT = ["00000000000000000000000000000000000000000000000000",
           "00000110110000011011000000000000000000000000000000",
           "00000000000000000000000000000000000000000000000000",]
 
-BLOCK_HEIGHT = 20
-BLOCK_WIDTH = 20
+SHEILDS = [
+    "  xxxxxxx",
+    " xxxxxxxxx",
+    "xxxxxxxxxxx",
+    "xxxxxxxxxxx",
+    "xxxxxxxxxxx",
+    "xxx     xxx",
+    "xx       xx",
+]
+
+BLOCK_HEIGHT = 7
+BLOCK_WIDTH = 7

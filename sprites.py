@@ -66,13 +66,13 @@ class Bomb(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.y_velo = 2
 
-        self.image = pygame.Surface((MISSILE_WIDTH, MISSILE_WIDTH))
+        self.image = pygame.Surface((BOMB_HW, BOMB_HW))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
-        pygame.draw.rect(self.image, BLUE, [self.rect.x, self.rect.y, MISSILE_WIDTH, MISSILE_WIDTH])
+        pygame.draw.rect(self.image, BLUE, [self.rect.x, self.rect.y, BOMB_HW, BOMB_HW])
 
     def update(self):
         self.rect.y += self.y_velo
@@ -81,5 +81,11 @@ class Bomb(pygame.sprite.Sprite):
             self.kill()
 
 
-class Block:
-    pass
+class Block(pygame.sprite.Sprite):
+    def __init__(self, display, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((BLOCK_WIDTH, BLOCK_HEIGHT))
+        self.image.fill(BLOCK_COLOR)
+        self.rect = self.image.get_rect()
+        self.rect.center = x, y
+        pygame.draw.rect(display, BLOCK_COLOR, [self.rect.x, self.rect.y, self.rect.width, self.rect.height])
