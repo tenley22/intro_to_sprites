@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left <= 0:
             self.rect.left = 0
 
+
 class Enemy(pygame.sprite.Sprite):
 
     def __init__(self, image_path, x, y):
@@ -89,3 +90,27 @@ class Block(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = x, y
         pygame.draw.rect(display, BLOCK_COLOR, [self.rect.x, self.rect.y, self.rect.width, self.rect.height])
+
+
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, center):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = EXPLOSIONS[0]
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+        self.frame = 0
+        self.frame_delay = 50
+        self.kill_center = center
+        self.previous_update = pygame.time.get_ticks()
+
+    def update(self):
+        current_update = pygame.time.get_ticks()
+        if current_update - self.previous_update > self.frame_delay:
+            self.previous_update = current_update
+            self.frame += 1
+        if self.frame == len(EXPLOSIONS):
+            self.kill()
+        else:
+            self.image = EXPLOSIONS[self.frame]
+            self.rect = self.image.get_rect()
+            self.rect.center = self.kill_center

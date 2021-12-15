@@ -1,10 +1,9 @@
 # go to terminal (@ bottom of screen) and write "pip install pygame" after PS C: line
 import random
-
 import pygame
 import math
 from settings import *
-from sprites import Player, Enemy, Missile, Bomb, Block
+from sprites import Player, Enemy, Missile, Bomb, Block, Explosion
 
 ############################################################
 ############################################################
@@ -18,6 +17,12 @@ clock = pygame.time.Clock()
 shoot_sound = pygame.mixer.Sound("assets/shoot.wav")
 enemy_kill = pygame.mixer.Sound("assets/invaderkilled.wav")
 
+# Fonts
+score = 0
+score_object = SMALL_FONT.render(f"Score: {score}", True, WHITE)
+score_rect = score_object.get_rect()
+score_rect.center = 100, 20
+
 ### SPRITE GROUPS ###
 all_sprites = pygame.sprite.Group()              # group for all sprites
 player_group = pygame.sprite.Group()             # create sprite group for player
@@ -25,6 +30,7 @@ missile_group = pygame.sprite.Group()            # create missile sprite group
 enemy_group = pygame.sprite.Group()
 bomb_group = pygame.sprite.Group()
 block_group = pygame.sprite.Group()
+explosion_group = pygame.sprite.Group()
 
 # Player
 player = Player("assets/player.png")            # create player object
@@ -97,10 +103,17 @@ while running:
     missile_block_collide = pygame.sprite.groupcollide(missile_group, block_group, True, True)
     bomb_block_collide = pygame.sprite.groupcollide(bomb_group, block_group, True, True)
     enemy_block_collide = pygame.sprite.groupcollide(enemy_group, block_group, False, True)
+    bomb_player
     # pygame.sprite.groupcollide(group1, group2, dokill1, dokill2)
     # dokill 1&2 are booleans (use true or false) true means the group disappears when collided, false means it doesn't
     if enemy_kills:
         enemy_kill.play()
+        score += 10
+        for hit in enemy_kills:
+            explosion = Explosion(hit.rect.center)
+            explosion_group.add(explosion)
+            all_sprites.add(explosion)
+
     # game over
     if player_enemy_collide:
         running = False
@@ -121,11 +134,17 @@ while running:
 
     screen.fill(BLACK)
 
+    # text
+    score_object = SMALL_FONT.render(f"Score: {score}", True, WHITE)
+    screen.blit(score_object, score_rect)
+
+    # call draw and update for each sprite
     bomb_group.draw(screen)
     enemy_group.draw(screen)
     missile_group.draw(screen)
-    player_group.draw(screen)               # call draw and update for each sprite
+    player_group.draw(screen)
     block_group.draw(screen)
+    explosion_group.draw(screen)
 
     # update all groups
     enemy_group.update(enemy_velocity)

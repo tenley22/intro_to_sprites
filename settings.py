@@ -1,4 +1,7 @@
 # color constants
+import pygame.font
+pygame.init()
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -6,7 +9,10 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 BLOCK_COLOR = (100, 0, 100)
 
-# math constants
+# font size constants
+SMALL_FONT = pygame.font.Font("assets/unifont.ttf", 25)
+MEDIUM_FONT = pygame.font.Font("assets/unifont.ttf", 35)
+LARGE_FONT = pygame.font.Font("assets/unifont.ttf", 45)
 
 # game constants
 DISPLAY_WIDTH = 600
@@ -19,6 +25,12 @@ BOMB_DELAY = 500
 MISSILE_WIDTH = 4
 MISSILE_HEIGHT = 15
 BOMB_HW = 6
+
+# explosion images
+EXPLOSIONS = []
+for i in range(8):
+    image_path = pygame.image.load(f"assets/sprite_{i}.png")
+    EXPLOSIONS.append(image_path)
 
 # images
 PLAYER = "assets/player.png"
