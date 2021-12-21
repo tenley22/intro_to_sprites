@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.image.load(image_path)
         self.rect = self.image.get_rect()
-        self.rect.center = DISPLAY_WIDTH // 2, DISPLAY_HEIGHT - self.rect.height
+        self.rect.center = DISPLAY_WIDTH // 2, DISPLAY_HEIGHT - self.rect.height*3
         self.x_velo = 0  # velocity
 
     def update(self):
@@ -31,13 +31,14 @@ class Player(pygame.sprite.Sprite):
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, image_path, x, y):
+    def __init__(self, image_path, x, y, value):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.image.load(image_path)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.value = value
 
     def update(self, x_velo):
         self.rect.x += x_velo
@@ -68,12 +69,12 @@ class Bomb(pygame.sprite.Sprite):
         self.y_velo = 2
 
         self.image = pygame.Surface((BOMB_HW, BOMB_HW))
-        self.image.fill(BLUE)
+        self.image.fill(PINK)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
-        pygame.draw.rect(self.image, BLUE, [self.rect.x, self.rect.y, BOMB_HW, BOMB_HW])
+        pygame.draw.rect(self.image, PINK, [self.rect.x, self.rect.y, BOMB_HW, BOMB_HW])
 
     def update(self):
         self.rect.y += self.y_velo
@@ -114,3 +115,18 @@ class Explosion(pygame.sprite.Sprite):
             self.image = EXPLOSIONS[self.frame]
             self.rect = self.image.get_rect()
             self.rect.center = self.kill_center
+
+
+class Ufo(pygame.sprite.Sprite):
+    def __init__(self, image_path):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load(image_path)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.rect.width*2, self.rect.height*3
+        self.x_velo = 1
+
+    def update(self):
+        self.rect.x += self.x_velo
+        if self.rect.right > DISPLAY_WIDTH or self.rect.left < 0:
+            self.x_velo *= -1

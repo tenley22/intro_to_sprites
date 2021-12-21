@@ -2,7 +2,7 @@
 import random
 import pygame
 from settings import *
-from sprites import Player, Enemy, Missile, Bomb, Block, Explosion
+from sprites import Player, Enemy, Missile, Bomb, Block, Explosion, Ufo
 
 ############################################################
 ############################################################
@@ -105,11 +105,17 @@ def play():
     bomb_group = pygame.sprite.Group()
     block_group = pygame.sprite.Group()
     explosion_group = pygame.sprite.Group()
+    ufo_group = pygame.sprite.Group()
 
     # Player
     player = Player("assets/player.png")            # create player object
     player_group.add(player)                        # add player to its group
     all_sprites.add(player)                         # add player to sprites group
+
+    #UFO
+    ufo = Ufo("assets/ufo.png")
+    ufo_group.add(ufo)
+    all_sprites.add(ufo)
 
     # enemy
     x_offset = 30
@@ -119,14 +125,17 @@ def play():
     for row in range(6):
         if row == 0:
             enemy_img = RED_ALIEN
+            value = 20
         elif 0 < row < 3:
             enemy_img = GREEN_ALIEN
+            value = 15
         else:
             enemy_img = YELLOW_ALIEN
+            value = 10
         for column in range(10):
             x_pos = column*h_spacing + x_offset
             y_pos = row*v_spacing + y_offset
-            enemy = Enemy(enemy_img, x_pos, y_pos)
+            enemy = Enemy(enemy_img, x_pos, y_pos, value)
             enemy_group.add(enemy)
 
     # blocks
@@ -172,25 +181,39 @@ def play():
             all_sprites.add(bomb)
 
         # COLLISION
-        enemy_kills = pygame.sprite.groupcollide(missile_group, enemy_group, True, True)
+        enemy_kills = pygame.sprite.groupcollide(enemy_group, missile_group, True, True)
         player_enemy_collide = pygame.sprite.groupcollide(player_group, enemy_group, True, True)
         missile_block_collide = pygame.sprite.groupcollide(missile_group, block_group, True, True)
         bomb_block_collide = pygame.sprite.groupcollide(bomb_group, block_group, True, True)
         enemy_block_collide = pygame.sprite.groupcollide(enemy_group, block_group, False, True)
         bomb_player_collide = pygame.sprite.groupcollide(bomb_group, player_group, True, False)
+        missile_ufo_collide = pygame.sprite.groupcollide(missile_group, ufo_group, True, True)
         # pygame.sprite.groupcollide(group1, group2, dokill1, dokill2)
         # dokill 1&2 are booleans (use true or false) true means the group disappears when collided, false means it doesn't
         if enemy_kills:
             enemy_kill.play()
-            score += 10
             for hit in enemy_kills:
+                score += hit.value
                 explosion = Explosion(hit.rect.center)
                 explosion_group.add(explosion)
                 all_sprites.add(explosion)
 
+        if missile_ufo_collide:
+            enemy_kill.play()
+            score += 10
+            for hit in missile_ufo_collide :
+                explosion = Explosion(hit.rect.center)
+                explosion_group.add(explosion)
+                all_sprites.add(explosion)
+
+
         # game over
         if bomb_player_collide:
             lives -= 1
+            for hit in bomb_player_collide:
+                explosion = Explosion(hit.rect.center)
+                explosion_group.add(explosion)
+                all_sprites.add(explosion)
         if player_enemy_collide or lives == 0:
             running = False
 
@@ -223,6 +246,7 @@ def play():
         player_group.draw(screen)
         block_group.draw(screen)
         explosion_group.draw(screen)
+        ufo_group.draw(screen)
 
         # update all groups
         enemy_group.update(enemy_velocity)
